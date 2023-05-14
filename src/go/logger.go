@@ -31,7 +31,7 @@ func (l *purpleLogger) Errorf(msg string, args ...interface{}) {
 	// this is useful for exposing low-level problems to the user
 	errorString := l.formatf(msg, args...)
 	errorLevel := ERROR_FATAL
-	if strings.Contains(errorString, "Error reading from websocket") {
+	if false && strings.Contains(errorString, "Error reading from websocket") {
 		// this is triggered by network error, it is non-fatal
 		// checking for "connection reset by peer" or "close 1006" would be more appropriate, but these messages are locale dependent
 		errorLevel = ERROR_TRANSIENT
