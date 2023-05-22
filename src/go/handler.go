@@ -76,6 +76,7 @@ func (handler *Handler) eventHandler(rawEvt interface{}) {
 		go handler.profile_picture_downloader()
 		handler.handle_connected()
 	case *events.Disconnected:
+		// TODO: Find out if it would be more sensible to handle this as a non-error disconnect.
 		purple_error(handler.account, "Disconnected.", ERROR_TRANSIENT)
 	case *events.StreamReplaced:
 		// TODO: find out when exactly this happens and how to handle it (fatal or transient error)
