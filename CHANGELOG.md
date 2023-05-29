@@ -1,3 +1,10 @@
+# 1.12.0
+
+* Feature: When receiving a voice-call, a message is displayed (voice calls are not supported).
+* Change: Textual QR-code now contains <br> tags.
+* Change: IRC-style commands now start with ? to avoid confusion with actual commands.
+* Change: The connection is marked as "connected" only after fetching contacts.
+
 # 1.11.1
 
 * Bugfix: /versions now actually prints version information.
