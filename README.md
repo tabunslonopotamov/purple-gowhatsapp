@@ -1,3 +1,17 @@
+This is a fork of the original hoehermann /
+Purple-gowhatsapp modified to be used with Spectrum2 as an xmpp transport.
+
+The changes are to truncate the @c.us and @g.us domain name when passed to the xmpp network.
+
+That is, whatsapp contacts in the xmpp roster get the name +7xxxxxxxxxx@wapp.youdomain.net
+
+The dirty code does not cover all interaction options correctly
+
+
+
+
+
+
 # purple-gowhatsapp
 
 A libpurple/Pidgin plugin for WhatsApp. Being developed on Ubuntu 22.04. 
