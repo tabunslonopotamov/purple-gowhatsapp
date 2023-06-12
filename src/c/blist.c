@@ -37,12 +37,13 @@ void gowhatsapp_ensure_buddy_in_blist(
     if (!purple_account_get_bool(account, GOWHATSAPP_FETCH_CONTACTS_OPTION, TRUE)) {
         return;
     }
-
-    PurpleBuddy *buddy = purple_blist_find_buddy(account, remoteJid);
+    
+    const char *remoteJidCut=strtok(remoteJid,"@");
+    PurpleBuddy *buddy = purple_blist_find_buddy(account, remoteJidCut);
 
     if (!buddy) {
         PurpleGroup *group = gowhatsapp_get_purple_group();
-        buddy = purple_buddy_new(account, remoteJid, display_name); // MEMCHECK: blist takes ownership
+        buddy = purple_buddy_new(account, remoteJidCut, display_name); // MEMCHECK: blist takes ownership
         purple_blist_add_buddy(buddy, NULL, group, NULL);
         gowhatsapp_subscribe_presence_updates(account, buddy);
     }
@@ -53,7 +54,7 @@ void gowhatsapp_ensure_buddy_in_blist(
     const char *local_alias = purple_buddy_get_alias(buddy);
     const char *server_alias = purple_blist_node_get_string(&buddy->node, "server_alias");
     if (display_name != NULL && !purple_strequal(local_alias, display_name) && !purple_strequal(server_alias, display_name)) {
-        serv_got_alias(purple_account_get_connection(account), remoteJid, display_name); // it seems buddy->server_alias is not persisted
+        serv_got_alias(purple_account_get_connection(account), remoteJidCut, display_name); // it seems buddy->server_alias is not persisted
         purple_blist_node_set_string(&buddy->node, "server_alias", display_name); // explicitly persisting the new name
     }
 }
@@ -79,16 +80,20 @@ gowhatsapp_add_buddy(PurpleConnection *pc, PurpleBuddy *buddy, PurpleGroup *grou
 PurpleChat * gowhatsapp_ensure_group_chat_in_blist(
     PurpleAccount *account, const char *remoteJid, const char *topic
 ) {
+   purple_debug_info(
+            "gowhatsapp", "remoteJid is %s.\n", remoteJid );
+    char *remoteJidBuf= strdup(remoteJid);
+    const char *remoteJidCut=strtok(remoteJidBuf,"@");
     gboolean fetch_contacts = purple_account_get_bool(
         account, GOWHATSAPP_FETCH_CONTACTS_OPTION, TRUE
     );
 
-    PurpleChat *chat = purple_blist_find_chat(account, remoteJid);
+    PurpleChat *chat = purple_blist_find_chat(account, remoteJidCut);
 
     if (chat == NULL && fetch_contacts) {
         GHashTable *comp = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, g_free); // MEMCHECK: purple_chat_new takes ownership
-        g_hash_table_insert(comp, "name", g_strdup(remoteJid)); // MEMCHECK: g_strdup'ed string released by GHashTable's value_destroy_func g_free (see above)
-        chat = purple_blist_chat_new(account, remoteJid, comp); // MEMCHECK: blist takes ownership
+        g_hash_table_insert(comp, "name", g_strdup(remoteJidCut));
+        chat = purple_chat_new(account, remoteJidCut, comp);
         PurpleGroup *group = gowhatsapp_get_purple_group();
         purple_blist_add_chat(chat, group, NULL);
     }

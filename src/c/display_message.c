@@ -52,7 +52,7 @@ gowhatsapp_display_text_message(PurpleConnection *pc, gowhatsapp_message_t *gwam
             // a buddy created here may be missing a display name,
             // but i don't think i ever saw one of them anyway
             gowhatsapp_ensure_buddy_in_blist(gwamsg->account, gwamsg->remoteJid, gwamsg->name);
-            purple_serv_got_im(pc, gwamsg->remoteJid, gwamsg->text, flags, gwamsg->timestamp);
+            purple_serv_got_im(pc, strtok(gwamsg->remoteJid,"@"), gwamsg->text, flags, gwamsg->timestamp);
         }
     }
 }
