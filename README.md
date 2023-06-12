@@ -1,3 +1,4 @@
+
 This is a fork of the original hoehermann /
 Purple-gowhatsapp modified to be used with Spectrum2 as an xmpp transport.
 
